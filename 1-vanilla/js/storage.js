@@ -1,5 +1,7 @@
 import { createPastDate } from "./helpers.js";
 
+// storage 외부서버 DB의 모양 MVC에서 MODEL
+
 const storage = {
   keywordData: [
     { id: 1, keyword: "샐러드" },
@@ -7,12 +9,14 @@ const storage = {
     { id: 3, keyword: "햄버거" },
   ],
 
+  // 검색이력목록
   historyData: [
     { id: 1, keyword: "검색기록1", date: createPastDate(3) },
     { id: 2, keyword: "검색기록2", date: createPastDate(2) },
     { id: 3, keyword: "검색기록3", date: createPastDate(1) },
   ],
 
+  // 상품목록
   productData: [
     {
       id: 1,
