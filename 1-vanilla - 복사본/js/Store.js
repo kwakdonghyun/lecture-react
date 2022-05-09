@@ -4,7 +4,6 @@ const tag = "[Store]";
 
 export default class Store {
   constructor(storage) {
-<<<<<<< HEAD
     console.log(tag, "constructor");
 
     if (!storage) throw "no storage";
@@ -56,12 +55,5 @@ export default class Store {
     const date = new Date();
     this.storage.historyData.push({ keyword, date });
     this.storage.historyData = this.storage.historyData.sort(this._sortHistory);
-=======
-    console.log(tag)
-
-    if (!storage) throw "no storage"; // 없으면 exception 던지고 있으면 내부변수로 저장하고있다.
-
-    this.storage = storage; 
->>>>>>> 027c3ed2c8ba3b3ef59527df7df1619c7740df22
   }
 }
