@@ -3,7 +3,6 @@ import { TabType } from "./views/TabView.js";
 const tag = "[Controller]";
 
 export default class Controller {
-<<<<<<< HEAD
   constructor(
     store,
     {
@@ -16,10 +15,6 @@ export default class Controller {
   ) {
     console.log(tag, "constructor");
 
-=======
-  constructor(store, views) {
-    console.log(tag)
->>>>>>> 027c3ed2c8ba3b3ef59527df7df1619c7740df22
     this.store = store;
 
     this.searchFormView = searchFormView;
