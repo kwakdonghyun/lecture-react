@@ -4,15 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lecture React</title>
+    <link rel="stylesheet" href="./style.css" /><!-- css가져오기 -->
   </head>
   <body>
     <div id="app"></div>
-
     <script
       crossorigin
       src="https://unpkg.com/react@17/umd/react.development.js"
     ></script>
-
     <script
       crossorigin
       src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
@@ -20,9 +19,17 @@
 
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <script type="text/babel">
-      const element = React.createElement("h1", null, "Hello world");
-      ReactDOM.render(element, document.querySelector("#app"));
-    </script>
+    <!-- 
+      type="text/babel" : babel이 컴파일하게,
+      src="js/main.js" 지정, 
+      data-type="module" : main.js에서 다른파일들을 import해올수있게 모듈로 지정,
+      data-presets="react" : babel이 presets정보를보고 컴파일하는데 react코드를만들거니까 react
+    -->
+    <script
+      type="text/babel"
+      src="js/main.js"
+      data-type="module"
+      data-presets="react"
+    ></script>
   </body>
 </html>
