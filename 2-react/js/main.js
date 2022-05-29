@@ -1,4 +1,17 @@
+import { formatRelativeDate } from "./js/helpers.js";
 import store from "./js/Store.js";
+
+
+const TabType = {
+    KEYWORD: "KEYWORD",
+    HISTORY: "HISTORY",
+};
+
+const TabLabel = {
+    [TabType.KEYWORD]: "추천 검색어",
+    [TabType.HISTORY]: "최근 검색어",
+};
+
 
 class App extends React.Component {
     constructor() {
@@ -8,14 +21,23 @@ class App extends React.Component {
             searchKeyword: "", // 검색에들어가는 input값 
             searchResult: [], // 검색결과
             submitted: false,
+            selectedTab: TabType.KEYWORD,
+            keywordList: [],
+            historyList: [],
         }
+    }
+
+    componentDidMount() {
+        const keywordList = store.getKeywordList()
+        const historyList = store.getHistoryList()
+        this.setState({ keywordList, historyList })
     }
 
     handleChangeInput(event) {
         // this.state.searchKeyword = event.target.value
         // this.forceUpdate();
         const searchKeyword = event.target.value
-        if (searchKeyword.length <= 0) {
+        if (searchKeyword.length <= 0 && this.state.submitted) {
             return this.handleReset()
         }
         this.setState({
@@ -31,22 +53,33 @@ class App extends React.Component {
 
     search(searchKeyword) {
         const searchResult = store.search(searchKeyword)
+        const historyList = store.getHistoryList() 
+
         this.setState({
+            searchKeyword,
             searchResult,
             submitted: true,
+            historyList,
         })
     }
 
     handleReset() {
         console.log('handleReset')
-        this.setState(
-            () => {
-                return { searchKeyword: "" }
-            },
-            () => {
-
-            })
+        this.setState({
+            searchKeyword: "",
+            submitted: false,
+            searchResult: [],
+        })
     }
+
+    handleClickRemoveHistory(event, keyword) {
+        event.stopPropagation(); // event 전파를 차단한다 버블링되지않게한다.
+
+        store.removeHistory(keyword)
+        const historyList = store.getHistoryList();
+        this.setState({ historyList })
+    }
+
     // render 오버라이딩
     render() { // react Element를 반환
 
@@ -93,6 +126,66 @@ class App extends React.Component {
             )
         )
 
+        const keywordList = (
+            <ul className='list'>
+                {this.state.keywordList.map(({ id, keyword }, index) => {
+                    return (
+                        <li onClick={() => {
+                            this.search(keyword)
+                        }
+                        }
+                            key={id}>
+                            <span className='number'>{index + 1}</span>
+                            <span>{keyword}</span>
+                        </li>
+                    )
+                })}
+            </ul>
+        )
+
+        const historyList = (
+            <ul className='list'>
+                {this.state.historyList.map(({ id, keyword, date }) => {
+                    return (
+                        <li key={id} onClick={() => this.search(keyword)}>
+                            <span>{keyword}</span>
+                            <span className='date'>{formatRelativeDate(date)}</span>
+                            <button
+                                className='btn-remove'
+                                onClick={event => this.handleClickRemoveHistory(event, keyword)}
+                            />
+
+                        </li>
+                    )
+                })}
+            </ul>
+        )
+
+        const tabs = (
+            <>
+                <ul className='tabs'>
+                    {Object.values(TabType).map(tabType => {
+                        return (
+                            <li
+                                className={this.state.selectedTab === tabType ? 'active' : ''}
+                                key={tabType}
+                                onClick={() =>
+                                    this.setState({
+                                        selectedTab: tabType
+                                    })
+                                }
+                            >
+                                {TabLabel[tabType]}
+                            </li>
+                        )
+                    })}
+                </ul>
+                {this.state.selectedTab === TabType.KEYWORD && <>{keywordList}</>}
+                {this.state.selectedTab === TabType.HISTORY && <>{historyList}</>}
+            </>
+        )
+
+
         return (
             <>
                 <header>
@@ -101,7 +194,7 @@ class App extends React.Component {
                 <div className="container">
                     {searchForm}
                     <div className='content'>
-                        {this.state.submitted && searchResult}
+                        {this.state.submitted ? searchResult : tabs}
                     </div>
                 </div>
             </>
